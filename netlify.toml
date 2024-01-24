@@ -1,5 +1,0 @@
-[build]
-  command = "npm run build"
-  publish = "public"  # 這裡指定你的前端靜態文件所在的目錄
-  functions = "functions"  # 這裡指定你的無服務器函數所在的目錄
-
