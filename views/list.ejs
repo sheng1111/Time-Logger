@@ -110,7 +110,7 @@
     </div>
 
     <script>
-        var timeRecords = <% - JSON.stringify(timeRecords) %>;
+        var timeRecords = <%- JSON.stringify(timeRecords) %>;
         function filterByDate(date) {
             window.location.href = `/list?date=${date}`; // 將選擇的日期作為查詢參數發送到後端
         }
