@@ -110,12 +110,13 @@
     </div>
 
     <script>
-        var timeRecords = <%- JSON.stringify(timeRecords) %>;
+        
         function filterByDate(date) {
             window.location.href = `/list?date=${date}`; // 將選擇的日期作為查詢參數發送到後端
         }
 
         document.addEventListener('DOMContentLoaded', function () {
+            var timeRecords = <%- JSON.stringify(timeRecords) %>;
             // 在頁面載入時檢查LocalStorage中的時間記錄
             const storedTimeRecords = JSON.parse(localStorage.getItem('timeRecords')) || [];
             timeRecords = storedTimeRecords;
@@ -143,13 +144,10 @@
 
         function addTimeLogsToLocalStorage(timeRecords) {
             if (timeRecords !== '') {
-                localStorage.removeItem('timeRecords');
-                const TimeLogs = [];
-
-                TimeLogs.push(timeRecords);
-                localStorage.setItem('timeRecords', JSON.stringify(TimeLogs));
+                localStorage.setItem('timeRecords', JSON.stringify(timeRecords));
             }
         }
+
 
         // 在離開頁面前保存時間記錄到LocalStorage
         window.addEventListener('beforeunload', function () {
