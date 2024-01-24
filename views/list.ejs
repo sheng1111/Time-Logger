@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <title>Time Logger</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <nav class="navbar sbg-body-tertiary sticky-top fixed-top">
+            <div class="container-fluid" style="margin-top: 5px;">
+                <a class="navbar-brand" href="#"></a>
+                <div class="row">
+                    <div class="col-auto">
+                        <input aria-label="時間" type="date" class="form-control col-auto"  value="<%= selectedDate %>"
+                            onchange="filterByDate(this.value)">
+                    </div>
+                    <div class="col-auto">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+                            aria-expanded="false" aria-label="Toggle navigation" style="margin-bottom: 0px;">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link" style="text-align:left; margin-left: 1rem;" href="/">計時器</a>
+                        <a class="nav-link active" style="text-align:left; margin-left: 1rem;" aria-current="page"
+                            href="/list">時間</a>
+                        <a class="nav-link" style="text-align:left; margin-left: 1rem;" href="/category">類別</a>
+                        <a class="nav-link" style="text-align:left; margin-left: 1rem;" href="/analytics">分析</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="main">
+            <div class="container-fluid table-responsive" style="height: 80vh; width: 95%; padding: 0px;">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>項目</th>
+                            <th>時間</th>
+                            <th>狀態</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (var i=0; i < timeRecords.length; i++) { %>
+                            <tr>
+                                <td name="time" style="vertical-align: middle;">
+                                    <span>
+                                        <%= timeRecords[i].time %>
+                                    </span>
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    <% if (timeRecords[i].submitted) { %>
+                                        <span data-id="<%= timeRecords[i].id %>">
+                                            <%= timeRecords[i].item %>
+                                        </span>
+                                        </select>
+                                        <% } else { %>
+                                            <select id="select_<%= i %>" data-index="<%= i %>"
+                                                style="padding-right: 15px;" class="form-select form-select-sm"
+                                                aria-label=".form-select-sm example" name="selectOptions"
+                                                onchange="document.getElementById('item_<%= i %>').value=this.value">
+                                                <!-- <option selected>選項</option>
+                                                <option value="工作">工作</option>
+                                                <option value="吃飯">吃飯</option>
+                                                <option value="睡覺">睡覺</option> -->
+                                            </select>
+                                            <% } %>
+                                </td>
+                                <td name="minutes" style="vertical-align: middle;">
+                                    <span>
+                                        <%= timeRecords[i].minutes %>分鐘
+                                    </span>
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    <% if (timeRecords[i].submitted) { %>
+                                        <form action="/createItem" method="POST">
+                                            <input type="submit" value="已確認" class="btn btn-sm btn-secondary">
+                                        </form>
+                                        <% } else { %>
+                                            <form action="/createItem" method="POST">
+                                                <input type="hidden" name="record-id" value="<%= timeRecords[i].id %>">
+                                                <input type="hidden" name="selectedDate" value="<%= selectedDate %>">
+                                                <input type="hidden" id="item_<%= i %>" name="item" value="">
+                                                <input type="submit" value="待確認" class="btn btn-sm btn-danger"
+                                                    onclick="return !!document.getElementById('item_<%= i %>').value;">
+                                            </form>
+                                            <% } %>
+                                </td>
+                            </tr>
+                            <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var timeRecords = <%- JSON.stringify(timeRecords) %>;
+        function filterByDate(date) {
+            window.location.href = `/list?date=${date}`; // 將選擇的日期作為查詢參數發送到後端
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            updateSelectOptions();
+            addTimeLogsToLocalStorage(timeRecords);
+        });
+
+        function updateSelectOptions() {
+            const categories = JSON.parse(localStorage.getItem('categories')) || [];
+            const selectElements = document.querySelectorAll('[id^="select_"]');
+
+            selectElements.forEach(select => {
+                select.innerHTML = '<option value=""></option>';
+                select.innerHTML = '<option selected>選項</option>'
+
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        function addTimeLogsToLocalStorage(timeRecords) {
+            if (timeRecords !== '') {
+                localStorage.removeItem('timeRecords');
+                const TimeLogs = [];
+
+                TimeLogs.push(timeRecords);
+                localStorage.setItem('timeRecords', JSON.stringify(TimeLogs));
+            }
+        }
+
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

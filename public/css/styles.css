@@ -1,0 +1,153 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+
+.navbar-collapse {
+    position: absolute;
+    top: 60px;
+    /* Adjust this value to the height of your navbar */
+    z-index: 1000;
+    /* This ensures that the dropdown appears on top of other content */
+    background-color: #ffffff;
+    /* Or any color that fits your design */
+    width: 100%;
+    /* Or the width of your navbar */
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    /* Optional: adds a shadow for better separation */
+    border-radius: 8px;
+}
+
+.container {
+    background-color: #ffffff;
+    min-height: 60vh;
+    /* Adjusted for a more balanced look */
+    width: 80vw;
+    /* Adjusted for a more balanced look */
+    padding: 5vh 5vw;
+    /* Proportional padding */
+    border-radius: 16px;
+    /* Softer border radius */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    /* Softer shadow */
+    text-align: center;
+}
+
+.main {
+    position: relative;
+    /* Add this line if not already present */
+    z-index: 1;
+    /* This ensures the content is above other elements if they overlap */
+    margin-top: 10px;
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+button {
+    background-color: #e7e7e7;
+    /* Softer color */
+    color: #333;
+    /* Dark grey text */
+    padding: 12px 20px;
+    /* Adjusted padding */
+    font-size: 18px;
+    /* Larger font size */
+    border: none;
+    border-radius: 8px;
+    /* Softer border radius */
+    box-shadow: none;
+    /* Removed the shadow for a flat design */
+    transition: all 0.3s ease;
+    /* Smoother transition */
+    outline: none;
+    /* Remove outline */
+}
+
+.buttons button {
+    width: 450px;
+    margin: 10px;
+}
+
+
+button:hover {
+    background-color: #d7d7d7;
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+#minutes,
+#seconds,
+#colon {
+    font-size: 5vw;
+    /* Responsive font size */
+    color: #333;
+    margin: 0;
+    /* Reset margin */
+}
+
+/* Responsive design for smaller devices */
+@media (max-width: 768px) {
+    .buttons {
+        margin-top: 3%;
+        display: flex;
+        align-self: center;
+        flex-wrap: wrap;
+    }
+
+    button {
+        width: 80%;
+        margin-bottom: 10px;
+    }
+
+    .buttons button {
+        width: 70%
+    }
+
+    .navbar-toggler {
+        width: auto;
+    }
+
+    .container {
+        height: 95%;
+        width: 97%;
+        margin: 3%;
+        padding: 0px;
+    }
+
+    #minutes,
+    #seconds,
+    #colon {
+        font-size: 10vw;
+        /* Even larger font size on smaller screens */
+    }
+
+    .navbar-collapse {
+        position: absolute;
+        top: 60px;
+        /* Adjust this value to the height of your navbar */
+        z-index: 1000;
+        /* This ensures that the dropdown appears on top of other content */
+        background-color: #ffffff;
+        /* Or any color that fits your design */
+        width: 30%;
+        left: 68%;
+        /* Or the width of your navbar */
+        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+        /* Optional: adds a shadow for better separation */
+        border-radius: 8px;
+    }
+}

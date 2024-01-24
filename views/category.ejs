@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <title>Time Logger</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <nav class="navbar sbg-body-tertiary sticky-top fixed-top">
+            <div class="container-fluid" style="margin-top: 5px;">
+                <a class="navbar-brand" href="#"></a>
+                <div class="row">
+                    <div class="col-auto">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+                            aria-expanded="false" aria-label="Toggle navigation" style="margin-bottom: 0px;">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link" style="text-align:left; margin-left: 1rem;" href="/">計時器</a>
+                        <a class="nav-link" style="text-align:left; margin-left: 1rem;" href="/list">時間</a>
+                        <a class="nav-link active" style="text-align:left; margin-left: 1rem;" aria-current="page"
+                            href="/category">類別</a>
+                        <a class="nav-link" style="text-align:left; margin-left: 1rem;" href="/analytics">分析</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="main">
+            <div class="container-fluid table-responsive">
+                <div class="row" style="justify-content:center;">
+                    <div class="col-auto">
+                        <input aria-label="text" type="text" class="form-control" id="newCategory" />
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-secondary" onclick="addCategory()"
+                            style="width: 4rem;">新增</button>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>類別</th>
+                            <th>刪除</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categoryList">
+                        <!-- 插入category.js資料 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/category.js"></script>
+</body>
+
+</html>
