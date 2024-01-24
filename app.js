@@ -3,7 +3,7 @@ const engine = require('ejs-locals');
 const moment = require('moment')
 const session = require('express-session');
 const bodyParser = require('body-parser');
-
+const path = require('path');
 
 let app = express()
 app.use(express.static('public'));
@@ -16,8 +16,9 @@ app.use(session({
 
 }));
 app.engine('ejs', engine);
-app.set('views', __dirname + '/views');
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, 'public'))); 
 
 app.get('/service-worker.js', (req, res) => {
     res.sendFile(__dirname + '/public/service-worker.js');
