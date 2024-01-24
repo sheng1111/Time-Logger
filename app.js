@@ -16,7 +16,7 @@ app.use(session({
 
 }));
 app.engine('ejs', engine);
-app.set('views', './views');
+app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 app.get('/service-worker.js', (req, res) => {
