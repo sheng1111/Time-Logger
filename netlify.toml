@@ -1,9 +1,9 @@
 [build]
   command = "npm install && npm run build"
-  publish = "public"
-  functions = "functions"
+  publish = "views"
+  functions = "netlify/functions"
 
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/views/index.html" 
   status = 200
