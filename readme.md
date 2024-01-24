@@ -14,19 +14,18 @@ Time-Logger 是我基於 EJS 和 Express 的學習項目，旨在為用戶提供
 - **PWA**: 利用 Service Workers 和 Web App Manifests 實現 PWA 功能。
 
 ## 安裝與啟動指南
-1. 克隆此 GitHub 存儲庫。
+1. clone 
 ```
 git clone https://github.com/sheng1111/Time-Logger.git
 ```
-2. 在項目根目錄安裝依賴。
+2. 安裝相關套件
 ```
 npm install
 ```
-3. 啟動應用程序。
+3. 啟動
 ```
-npm start
+npm run start
 ```
-
 
 ## 如何使用
 提供基本的使用說明，包括如何記錄時間，以及如何查看已記錄的時間。
