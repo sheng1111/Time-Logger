@@ -12,10 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const lastMonday = getMonday(new Date());
 
     const filteredRecords = timeRecords[0].filter(record => {
-        const recordDate = new Date(record.date);
-        return recordDate >= lastMonday;
-    });
-
+        const recordDate = record.date ? new Date(record.date) : null;
+        return recordDate && recordDate >= lastMonday;
+    });    
     const timeSummary = filteredRecords.reduce((acc, record) => {
         if (!acc[record.item]) {
             acc[record.item] = 0;
