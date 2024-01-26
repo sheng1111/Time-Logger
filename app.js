@@ -7,11 +7,8 @@ const { Pool } = require('pg');
 
 // PostgreSQL Pool
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
-});
+    connectionString: process.env.POSTGRES_URL + "?sslmode=require",
+})
 
 // Express app setup
 let app = express();
@@ -21,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.engine('ejs', engine);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.use(express.static(path.join(__dirname, 'public'))); 
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Create TimeLogs table if it doesn't exist
 pool.query('CREATE TABLE IF NOT EXISTS TimeLogs (id SERIAL PRIMARY KEY, date TEXT, time TEXT, item TEXT, minutes INT, submitted BOOLEAN)', (err, res) => {
@@ -39,7 +36,7 @@ app.get('/', (req, res) => {
 
 app.get('/list', (req, res) => {
     const selectedDate = req.query.date || moment(new Date()).utcOffset(8).format('YYYY-MM-DD');
-    
+
     pool.query('SELECT * FROM TimeLogs WHERE date = $1', [selectedDate], (err, result) => {
         if (err) {
             res.status(500).send('Error fetching records');
