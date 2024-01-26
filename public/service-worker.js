@@ -9,14 +9,11 @@ self.addEventListener('install', (event) => {
         '/scripts/category.js',
         '/scripts/script.js',
         '/images/dog.png',
-        '/images/favicon.ico',
-      ]).catch(error => {
-        console.error('Failed to cache some resources:', error);
-      });
+        '/images/favicon.ico'
+      ]);
     })
   );
 });
-
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(
