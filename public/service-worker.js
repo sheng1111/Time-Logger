@@ -4,7 +4,7 @@ self.addEventListener('install', (event) => {
     caches.open('Time Logger').then((cache) => {
       return cache.addAll([
         '/',
-        '/styles/style.css',
+        '/styles/styles.css',
         '/scripts/analytics.js',
         '/scripts/category.js',
         '/scripts/script.js',
