@@ -1,13 +1,12 @@
-// service-worker.js
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open('Time Logger').then((cache) => {
       return cache.addAll([
         '/',
-        '/styles/styles.css',
-        '/scripts/analytics.js',
-        '/scripts/category.js',
-        '/scripts/script.js',
+        '/css/styles.css',
+        '/js/analytics.js',
+        '/js/category.js',
+        '/js/script.js',
         '/images/dog.png',
         '/images/favicon.ico'
       ]);
