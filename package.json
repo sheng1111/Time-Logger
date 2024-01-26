@@ -10,6 +10,7 @@
   "author": "rio",
   "license": "ISC",
   "dependencies": {
+    "@vercel/kv": "^1.0.1",
     "body-parser": "^1.20.2",
     "ejs": "^3.1.9",
     "ejs-locals": "^1.0.2",
