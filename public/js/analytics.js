@@ -11,8 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const lastMonday = getMonday(new Date());
 
-
     let filteredRecords = [];
+
     if (timeRecords.length > 0 && Array.isArray(timeRecords[0])) {
         filteredRecords = timeRecords[0].filter(record => {
             const recordDate = new Date(record.date);
