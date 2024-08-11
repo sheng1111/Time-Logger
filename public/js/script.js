@@ -1,85 +1,13 @@
-let db; // 全域變數，用來儲存資料庫連線
-let seconds = 0; // 計時器的秒數
-let minutes = 0; // 計時器的分鐘數
-const displaySeconds = document.getElementById("seconds"); // 用來顯示秒數的 HTML 元素
-const displayMinutes = document.getElementById("minutes"); // 用來顯示分鐘數的 HTML 元素
-let interval; // 計時器的間隔函式
-let timeStatus; // 用來追蹤計時器的狀態（開始、停止、重置）
-let timeRecord = {}; // 用來儲存一條時間紀錄的物件
-let startTime; // 計時開始的時間
-let startDate; // 計時開始的日期
+let seconds = 0;
+let minutes = 0;
+const displaySeconds = document.getElementById("seconds");
+const displayMinures = document.getElementById("minutes");
+let interval;
+let timeStatus;
+let timeRecord = {};
+let stratTime;
+let stratDate;
 
-// 開啟 IndexedDB 資料庫，版本設為 2
-let request = window.indexedDB.open("TimeLoggerDB", 2);
-
-// 當資料庫第一次被開啟或版本變更時觸發，這裡用來創建資料表
-request.onupgradeneeded = function (event) {
-  db = event.target.result;
-  // 如果 TimeLogs 資料表不存在，則創建它
-  if (!db.objectStoreNames.contains("TimeLogs")) {
-    let timeLogsStore = db.createObjectStore("TimeLogs", {
-      keyPath: "id", // 每筆記錄的唯一標識符
-      autoIncrement: true, // 自動遞增 ID
-    });
-    // 為日期欄位創建索引，允許多筆記錄擁有相同日期
-    timeLogsStore.createIndex("date", "date", { unique: false });
-  }
-};
-
-// 當資料庫成功開啟時觸發
-request.onsuccess = function (event) {
-  db = event.target.result; // 儲存資料庫連線
-
-  // 手動檢查 'TimeLogs' 物件存儲是否存在，若不存在則創建
-  checkAndCreateObjectStore();
-};
-
-// 當資料庫開啟失敗時觸發
-request.onerror = function (event) {
-  console.error("開啟 IndexedDB 時發生錯誤:", event);
-};
-
-// 檢查並創建 'TimeLogs' 物件存儲的函式
-function checkAndCreateObjectStore() {
-  const transaction = db.transaction(["TimeLogs"], "versionchange");
-
-  transaction.onerror = function (event) {
-    console.error("檢查或創建 'TimeLogs' 物件存儲時發生錯誤:", event);
-  };
-
-  const objectStoreNames = db.objectStoreNames;
-  if (!objectStoreNames.contains("TimeLogs")) {
-    // 使用版本更改交易來創建物件存儲
-    const newVersion = db.version + 1;
-    db.close();
-
-    const request = window.indexedDB.open("TimeLoggerDB", newVersion);
-
-    request.onupgradeneeded = function (event) {
-      db = event.target.result;
-
-      let timeLogsStore = db.createObjectStore("TimeLogs", {
-        keyPath: "id",
-        autoIncrement: true,
-      });
-      timeLogsStore.createIndex("date", "date", { unique: false });
-
-      console.log("成功創建 'TimeLogs' 物件存儲");
-    };
-
-    request.onsuccess = function (event) {
-      db = event.target.result;
-    };
-
-    request.onerror = function (event) {
-      console.error("創建 'TimeLogs' 物件存儲時發生錯誤:", event);
-    };
-  } else {
-    console.log("'TimeLogs' 物件存儲已存在");
-  }
-}
-
-// 點擊開始按鈕時觸發
 startBtn.onclick = () => {
   if (timeStatus === "startBtn") {
     console.log("計時器已經啟動");
