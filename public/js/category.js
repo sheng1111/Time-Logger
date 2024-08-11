@@ -67,5 +67,5 @@ function deleteCategory(category) {
   updateCategoryList();
 }
 
-// 初始化時更新顯示的類別列表
+// 初始化時更新顯示類別列表
 updateCategoryList();
