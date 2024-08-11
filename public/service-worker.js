@@ -1,6 +1,7 @@
+// 在 Service Worker 安裝時，預緩存指定的資源
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open("Time Logger").then((cache) => {
+    caches.open("TimeLoggerCache").then((cache) => {
       return cache.addAll([
         "/",
         "/css/styles.css",
@@ -14,37 +15,39 @@ self.addEventListener("install", (event) => {
   );
 });
 
+// 攔截網路請求並嘗試從緩存中提供響應，網路失敗時再使用緩存
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      // 嘗試從網路獲取最新資源，失敗則使用緩存
-      return fetch(event.request).catch(() => response);
-    })
+    fetch(event.request)
+      .then((response) => {
+        // 如果請求成功，更新緩存中的請求
+        return caches.open("TimeLoggerCache").then((cache) => {
+          cache.put(event.request, response.clone());
+          return response;
+        });
+      })
+      .catch(() => {
+        // 如果網路請求失敗，則從緩存中查找匹配的請求
+        return caches.match(event.request).then((cachedResponse) => {
+          return cachedResponse || Promise.reject("no-match");
+        });
+      })
   );
 });
 
+// 啟用 Service Worker 並清除舊緩存
 self.addEventListener("activate", (event) => {
-  var cacheWhitelist = ["Time Logger"];
-
+  const cacheWhitelist = ["TimeLoggerCache"];
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
+          if (!cacheWhitelist.includes(cacheName)) {
             return caches.delete(cacheName);
           }
         })
       );
     })
   );
-  return self.clients.claim(); // 強制當前 Service Worker 成為活動的 Worker
+  return self.clients.claim();
 });
-
-// 確保在重新加載頁面時，舊的 Service Worker 被正確清除
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.getRegistrations().then((registrations) => {
-    for (let registration of registrations) {
-      registration.unregister();
-    }
-  });
-}
