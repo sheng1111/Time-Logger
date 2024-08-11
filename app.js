@@ -1,88 +1,53 @@
-const express = require('express');
-const engine = require('ejs-locals');
-const moment = require('moment');
-const bodyParser = require('body-parser');
-const path = require('path');
-const { Pool } = require('pg');
+const express = require("express");
+const engine = require("ejs-locals");
+const path = require("path");
 
-// PostgreSQL Pool
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL + "?sslmode=require",
-})
+// 建立 Express 應用程式
+const app = express();
 
-// Express app setup
-let app = express();
-app.use(express.static('public'));
+// 設定靜態檔案目錄
+app.use(express.static("public"));
+
+// 使用中介軟體解析 JSON 和 URL 編碼的請求主體
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.engine('ejs', engine);
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.use(express.static(path.join(__dirname, 'public')));
 
-// Create TimeLogs table if it doesn't exist
-pool.query('CREATE TABLE IF NOT EXISTS TimeLogs (id SERIAL PRIMARY KEY, date TEXT, time TEXT, item TEXT, minutes INT, submitted BOOLEAN)', (err, res) => {
-    if (err) {
-        console.error('Error creating table', err.stack);
-    } else {
-        console.log('Table TimeLogs created or already exists');
-    }
+// 設定 EJS 引擎和視圖檔案路徑
+app.engine("ejs", engine);
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+
+// 再次設定靜態檔案目錄，確保正確的檔案路徑
+app.use(express.static(path.join(__dirname, "public")));
+
+// 定義路由處理 GET 請求，回應相應的 EJS 視圖
+
+// 首頁路由，回應 index.ejs
+app.get("/", (req, res) => {
+  res.render("index.ejs");
 });
 
-// Routes
-app.get('/', (req, res) => {
-    res.render('index.ejs');
+// 列表頁路由，接收可選的日期參數，並回應 list.ejs
+app.get("/list", (req, res) => {
+  // 檢查是否有傳入日期參數，沒有則使用當前日期
+  const selectedDate = req.query.date || new Date().toISOString().split("T")[0];
+
+  // 渲染 list.ejs，並將選定的日期傳遞給視圖
+  res.render("list.ejs", { selectedDate: selectedDate });
 });
 
-app.get('/list', (req, res) => {
-    const selectedDate = req.query.date || moment(new Date()).utcOffset(8).format('YYYY-MM-DD');
-
-    pool.query('SELECT * FROM TimeLogs WHERE date = $1', [selectedDate], (err, result) => {
-        if (err) {
-            res.status(500).send('Error fetching records');
-        } else {
-            res.render('list.ejs', { timeRecords: result.rows, selectedDate: selectedDate });
-        }
-    });
+// 類別頁路由，回應 category.ejs
+app.get("/category", (req, res) => {
+  res.render("category.ejs");
 });
 
-app.post('/createTimeLog', (req, res) => {
-    const timeRecord = req.body.timeRecord;
-    const query = 'INSERT INTO TimeLogs (date, time, minutes, submitted) VALUES ($1, $2, $3, $4)';
-    const values = [timeRecord.date, timeRecord.time, timeRecord.minutes, false];
-
-    pool.query(query, values, (err, result) => {
-        if (err) {
-            res.status(500).send('Error while creating time log');
-        } else {
-            res.status(200).send('Time log created successfully!');
-        }
-    });
+// 分析頁路由，回應 analytics.ejs
+app.get("/analytics", (req, res) => {
+  res.render("analytics.ejs");
 });
 
-app.post('/createItem', (req, res) => {
-    const item = req.body.item;
-    const recordId = req.body['record-id'];
-
-    pool.query('UPDATE TimeLogs SET item = $1, submitted = true WHERE id = $2', [item, recordId], (err, result) => {
-        if (err) {
-            res.status(500).send('Error updating record');
-        } else {
-            res.redirect(`/list?date=${moment(new Date()).utcOffset(8).format('YYYY-MM-DD')}`);
-        }
-    });
-});
-
-app.get('/category', (req, res) => {
-    res.render('category.ejs');
-});
-
-app.get('/analytics', (req, res) => {
-    res.render('analytics.ejs');
-});
-
-// Start server
+// 啟動伺服器，並監聽指定的端口
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });

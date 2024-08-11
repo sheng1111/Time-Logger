@@ -1,80 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#333"/>
-    <link rel="manifest" href="/manifest.webmanifest">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#333" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <title>Time Logger</title>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://getbootstrap.com/docs/5.3/assets/css/docs.css"
+      rel="stylesheet"
+    />
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/styles.css" />
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js')
-                .then((registration) => {
-                    console.log('Service Worker registered with scope:', registration.scope);
-                })
-                .catch((error) => {
-                    console.error('Service Worker registration failed:', error);
-                });
-        }
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/service-worker.js")
+          .then((registration) => {
+            console.log(
+              "Service Worker registered with scope:",
+              registration.scope
+            );
+          })
+          .catch((error) => {
+            console.error("Service Worker registration failed:", error);
+          });
+      }
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container">
-        <nav class="navbar sbg-body-tertiary sticky-top fixed-top">
-            <div class="container-fluid" style="margin-top: 5px;">
-                <a class="navbar-brand" href="#"></a>
-                <div class="row">
-                    <div class="col-auto">
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
-                            aria-expanded="false" aria-label="Toggle navigation" style="margin-bottom: 0px;">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                    </div>
-
-                </div>
-
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <div class="navbar-nav">
-                        <a class="nav-link" style="text-align:left; margin-left: 1rem;" href="/">計時器</a>
-                        <a class="nav-link" style="text-align:left; margin-left: 1rem;" href="/list">時間</a>
-                        <a class="nav-link" style="text-align:left; margin-left: 1rem;" href="/category">類別</a>
-                        <a class="nav-link active" style="text-align:left; margin-left: 1rem;" aria-current="page"
-                            href="/analytics">分析</a>
-                    </div>
-                </div>
+      <nav class="navbar sbg-body-tertiary sticky-top fixed-top">
+        <div class="container-fluid" style="margin-top: 5px">
+          <a class="navbar-brand" href="#"></a>
+          <div class="row">
+            <div class="col-auto">
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                style="margin-bottom: 0px"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
             </div>
-        </nav>
-
-        <div class="main">
-            <div class="container-fluid table-responsive">
-                <h1>本週花費時間</h1>
-                <br>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>項目</th>
-                            <th>分鐘</th>
-                        </tr>
-                    </thead>
-                    <tbody id="analyticsTable">
-                        <!-- analytics.js資料 -->
-                    </tbody>
-                </table>
+          </div>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a
+                class="nav-link"
+                style="text-align: left; margin-left: 1rem"
+                href="/"
+                >計時器</a
+              >
+              <a
+                class="nav-link"
+                style="text-align: left; margin-left: 1rem"
+                href="/list"
+                >時間</a
+              >
+              <a
+                class="nav-link"
+                style="text-align: left; margin-left: 1rem"
+                href="/category"
+                >類別</a
+              >
+              <a
+                class="nav-link active"
+                style="text-align: left; margin-left: 1rem"
+                aria-current="page"
+                href="/analytics"
+                >分析</a
+              >
             </div>
+          </div>
         </div>
+      </nav>
+
+      <div class="main">
+        <div class="container-fluid table-responsive">
+          <h1>本週花費時間</h1>
+          <div class="mb-3">
+            <label for="weekSelector" class="form-label">選擇月份及週</label>
+            <select id="weekSelector" class="form-select">
+              <!-- 動態生成選項 -->
+            </select>
+          </div>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>項目</th>
+                <th>分鐘</th>
+              </tr>
+            </thead>
+            <tbody id="analyticsTable">
+              <!-- analytics.js資料 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/analytics.js"></script>
-</body>
-
+  </body>
 </html>
