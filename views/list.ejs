@@ -1,167 +1,325 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#333"/>
-    <link rel="manifest" href="/manifest.webmanifest">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#333" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <title>Time Logger</title>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://getbootstrap.com/docs/5.3/assets/css/docs.css"
+      rel="stylesheet"
+    />
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="/css/styles.css">
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js')
-                .then((registration) => {
-                    console.log('Service Worker registered with scope:', registration.scope);
-                })
-                .catch((error) => {
-                    console.error('Service Worker registration failed:', error);
-                });
+    <link rel="stylesheet" href="/css/styles.css" />
+    <style>
+      .custom-btn {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+        margin: 0 auto; /* 確保按鈕在td中水平居中 */
+        display: inline-flex; /* 確保按鈕內文字居中 */
+        justify-content: center;
+        align-items: center;
+        line-height: 1;
+      }
+
+      .btn-confirm {
+        background-color: #ff6f61;
+        color: white;
+      }
+
+      .btn-edit {
+        background-color: #6b8e23;
+        color: white;
+      }
+
+      td,
+      select {
+        white-space: nowrap;
+        font-size: 0.8rem;
+        vertical-align: middle; /* 確保文字垂直置中 */
+        text-align: center; /* 確保文字和按鈕水平居中 */
+      }
+
+      select {
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        padding: 4px 8px;
+        line-height: 1.5;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+        background-repeat: no-repeat;
+        background-position-x: 100%;
+        background-position-y: 50%;
+        background-size: 10px;
+      }
+
+      select:focus {
+        outline: none;
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      }
+
+      td select {
+        width: 100%;
+        max-width: 150px;
+      }
+
+      /* 確保狀態欄內按鈕垂直和水平居中 */
+      td,
+      button {
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      /* 保持小螢幕顯示一致 */
+      @media (max-width: 767px) {
+        td {
+          text-align: center;
         }
+      }
+    </style>
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/service-worker.js")
+          .then((registration) => {
+            console.log(
+              "Service Worker registered with scope:",
+              registration.scope
+            );
+          })
+          .catch((error) => {
+            console.error("Service Worker registration failed:", error);
+          });
+      }
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container">
-        <nav class="navbar sbg-body-tertiary sticky-top fixed-top">
-            <div class="container-fluid" style="margin-top: 5px;">
-                <a class="navbar-brand" href="#"></a>
-                <div class="row">
-                    <div class="col-auto">
-                        <input aria-label="時間" type="date" class="form-control col-auto" value="<%= selectedDate %>"
-                            onchange="filterByDate(this.value)">
-                    </div>
-                    <div class="col-auto">
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
-                            aria-expanded="false" aria-label="Toggle navigation" style="margin-bottom: 0px;">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <div class="navbar-nav">
-                        <a class="nav-link" style="text-align:left; margin-left: 1rem;" href="/">計時器</a>
-                        <a class="nav-link active" style="text-align:left; margin-left: 1rem;" aria-current="page"
-                            href="/list">時間</a>
-                        <a class="nav-link" style="text-align:left; margin-left: 1rem;" href="/category">類別</a>
-                        <a class="nav-link" style="text-align:left; margin-left: 1rem;" href="/analytics">分析</a>
-                    </div>
-                </div>
+      <nav class="navbar sbg-body-tertiary sticky-top fixed-top">
+        <div class="container-fluid" style="margin-top: 5px">
+          <a class="navbar-brand" href="#"></a>
+          <div class="row">
+            <div class="col-auto">
+              <input
+                aria-label="時間"
+                type="date"
+                class="form-control col-auto small-font"
+                value="<%= selectedDate %>"
+                onchange="filterByDate(this.value)"
+              />
             </div>
-        </nav>
-
-        <div class="main">
-            <div class="container-fluid table-responsive" style="height: 80vh; width: 95%; padding: 0px;">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>日期</th>
-                            <th>項目</th>
-                            <th>時間</th>
-                            <th>狀態</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% for (var i=0; i < timeRecords.length; i++) { %>
-                            <tr>
-                                <td name="time" style="vertical-align: middle;">
-                                    <span>
-                                        <%= timeRecords[i].time %>
-                                    </span>
-                                </td>
-                                <td style="vertical-align: middle;">
-                                    <% if (timeRecords[i].submitted) { %>
-                                        <span data-id="<%= timeRecords[i].id %>">
-                                            <%= timeRecords[i].item %>
-                                        </span>
-                                        </select>
-                                        <% } else { %>
-                                            <select id="select_<%= i %>" data-index="<%= i %>"
-                                                style="padding-right: 15px;" class="form-select form-select-sm"
-                                                aria-label=".form-select-sm example" name="selectOptions"
-                                                onchange="document.getElementById('item_<%= i %>').value=this.value">
-                                                <!-- <option selected>選項</option>
-                                                <option value="工作">工作</option>
-                                                <option value="吃飯">吃飯</option>
-                                                <option value="睡覺">睡覺</option> -->
-                                            </select>
-                                            <% } %>
-                                </td>
-                                <td name="minutes" style="vertical-align: middle;">
-                                    <span>
-                                        <%= timeRecords[i].minutes %>分鐘
-                                    </span>
-                                </td>
-                                <td style="vertical-align: middle;">
-                                    <% if (timeRecords[i].submitted) { %>
-                                        <form action="/createItem" method="POST">
-                                            <input type="submit" value="已確認" class="btn btn-sm btn-secondary">
-                                        </form>
-                                        <% } else { %>
-                                            <form action="/createItem" method="POST">
-                                                <input type="hidden" name="record-id" value="<%= timeRecords[i].id %>">
-                                                <input type="hidden" name="selectedDate" value="<%= selectedDate %>">
-                                                <input type="hidden" id="item_<%= i %>" name="item" value="">
-                                                <input type="submit" value="待確認" class="btn btn-sm btn-danger"
-                                                    onclick="return !!document.getElementById('item_<%= i %>').value;">
-                                            </form>
-                                            <% } %>
-                                </td>
-                            </tr>
-                            <% } %>
-                    </tbody>
-                </table>
+            <div class="col-auto">
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                style="margin-bottom: 0px"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
             </div>
+          </div>
+
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a
+                class="nav-link"
+                style="text-align: left; margin-left: 1rem"
+                href="/"
+                >計時器</a
+              >
+              <a
+                class="nav-link active"
+                style="text-align: left; margin-left: 1rem"
+                aria-current="page"
+                href="/list"
+                >時間</a
+              >
+              <a
+                class="nav-link"
+                style="text-align: left; margin-left: 1rem"
+                href="/category"
+                >類別</a
+              >
+              <a
+                class="nav-link"
+                style="text-align: left; margin-left: 1rem"
+                href="/analytics"
+                >分析</a
+              >
+            </div>
+          </div>
         </div>
+      </nav>
+
+      <div class="main">
+        <div
+          class="container-fluid table-responsive"
+          style="height: 80vh; width: 95%; padding: 0px"
+        >
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>項目</th>
+                <th>時間</th>
+                <th>分類</th>
+                <th>狀態</th>
+              </tr>
+            </thead>
+            <tbody id="timeRecordsBody">
+              <!-- 用於顯示從 IndexedDB 提取的時間記錄 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <script>
-        var timeRecords = <%- JSON.stringify(timeRecords) %>;
-        function filterByDate(date) {
-            window.location.href = `/list?date=${date}`; // 將選擇的日期作為查詢參數發送到後端
+      // 當文件完成載入後執行
+      document.addEventListener("DOMContentLoaded", function () {
+        const request = window.indexedDB.open("TimeLoggerDB", 2); // 開啟 IndexedDB，版本設為 2
+
+        // 成功開啟資料庫時執行
+        request.onsuccess = function (event) {
+          const db = event.target.result; // 取得資料庫連線
+          if (!db.objectStoreNames.contains("TimeLogs")) {
+            console.error("資料庫 'TimeLogs' 不存在");
+            return;
+          }
+
+          const transaction = db.transaction(["TimeLogs"], "readonly"); // 開啟只讀交易
+          const timeLogsStore = transaction.objectStore("TimeLogs");
+          const index = timeLogsStore.index("date"); // 使用日期索引進行查詢
+          const request = index.getAll("<%= selectedDate %>"); // 根據選定日期查詢所有紀錄
+
+          // 成功獲取資料時執行
+          request.onsuccess = function (event) {
+            const timeRecords = event.target.result; // 取得查詢結果
+            const timeRecordsBody = document.getElementById("timeRecordsBody"); // 取得表格的 tbody 元素
+
+            // 讀取本地儲存的分類
+            const categories =
+              JSON.parse(localStorage.getItem("categories")) || [];
+
+            // 生成表格行，並插入到表格中
+            timeRecordsBody.innerHTML = timeRecords
+              .map(
+                (record, index) => `
+              <tr>
+                <td>${record.date
+                  .slice(5)
+                  .replace("-", "/")}</td> <!-- 將日期格式化為 MM/DD -->
+                <td>${record.item || "待分類"}</td>
+                <td>${record.time}</td>
+                <td>
+                  <select id="categorySelect_${index}">
+                    <option value="">選擇</option>
+                    ${categories
+                      .map(
+                        (category) =>
+                          `<option value="${category}">${category}</option>`
+                      )
+                      .join("")}
+                    <option value="delete">刪除</option>
+                  </select>
+                </td>
+                <td>
+                  ${
+                    record.item === "" || record.item === "待分類"
+                      ? `<button class="custom-btn btn-confirm" onclick="confirmCategory(${record.id}, 'categorySelect_${index}')">✔️</button>`
+                      : `<button class="custom-btn btn-edit" onclick="editCategory(${record.id}, 'categorySelect_${index}')">✏️</button>`
+                  }
+                </td>
+              </tr>
+            `
+              )
+              .join("");
+          };
+
+          // 查詢失敗時執行
+          request.onerror = function (event) {
+            console.error("檢索時間紀錄時發生錯誤:", event.target.error);
+          };
+        };
+
+        // 資料庫開啟失敗時執行
+        request.onerror = function (event) {
+          console.error("開啟 IndexedDB 時發生錯誤:", event);
+        };
+      });
+
+      // 確認並更新分類
+      function confirmCategory(id, selectElementId) {
+        const category = document.getElementById(selectElementId).value; // 取得選定的分類
+        if (category === "") {
+          alert("請選擇一個分類");
+          return;
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            updateSelectOptions();
-            addTimeLogsToLocalStorage(timeRecords);
-        });
+        const request = window.indexedDB.open("TimeLoggerDB", 2); // 再次開啟資料庫連線
+        request.onsuccess = function (event) {
+          const db = event.target.result;
+          const transaction = db.transaction(["TimeLogs"], "readwrite"); // 開啟讀寫交易
+          const timeLogsStore = transaction.objectStore("TimeLogs");
 
-        function updateSelectOptions() {
-            const categories = JSON.parse(localStorage.getItem('categories')) || [];
-            const selectElements = document.querySelectorAll('[id^="select_"]');
+          const getRequest = timeLogsStore.get(id); // 取得指定 ID 的紀錄
+          getRequest.onsuccess = function (event) {
+            const record = getRequest.result;
+            if (category === "delete") {
+              // 如果選擇的是刪除，則刪除該紀錄
+              timeLogsStore.delete(id).onsuccess = function () {
+                alert("項目已刪除");
+                location.reload(); // 刷新頁面
+              };
+            } else {
+              // 否則更新分類
+              record.item = category;
 
-            selectElements.forEach(select => {
-                select.innerHTML = '<option value=""></option>';
-                select.innerHTML = '<option selected>選項</option>'
-
-                categories.forEach(category => {
-                    const option = document.createElement('option');
-                    option.value = category;
-                    option.textContent = category;
-                    select.appendChild(option);
-                });
-            });
-        }
-
-        function addTimeLogsToLocalStorage(timeRecords) {
-            if (timeRecords !== '') {
-                localStorage.removeItem('timeRecords');
-                const TimeLogs = [];
-
-                TimeLogs.push(timeRecords);
-                localStorage.setItem('timeRecords', JSON.stringify(TimeLogs));
+              const putRequest = timeLogsStore.put(record); // 將更新後的紀錄存回資料庫
+              putRequest.onsuccess = function () {
+                alert("分類已更新");
+                location.reload(); // 刷新頁面
+              };
             }
-        }
+          };
+        };
+      }
+
+      // 編輯分類，邏輯與 confirmCategory 相同
+      function editCategory(id, selectElementId) {
+        confirmCategory(id, selectElementId);
+      }
+
+      // 根據選定日期過濾紀錄，並將結果發送到伺服器端進行處理
+      function filterByDate(date) {
+        // 將選擇的日期作為查詢參數發送到伺服器端
+        window.location.href = `/list?date=${encodeURIComponent(date)}`;
+      }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
+  </body>
 </html>
