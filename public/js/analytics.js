@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const firstRecordDate = new Date(timeRecords[0].date);
       const currentDate = new Date();
       let currentStartDate = getMonday(firstRecordDate);
+      let lastOption;
 
       // 依據週次遞增並填充下拉選單
       while (currentStartDate <= currentDate) {
@@ -57,13 +58,15 @@ document.addEventListener("DOMContentLoaded", function () {
         )}`;
         weekSelector.appendChild(option);
 
+        lastOption = option; // 保留最後一個選項，即最新的一週
+
         currentStartDate.setDate(currentStartDate.getDate() + 7);
       }
 
-      // 在選項填充完畢後加載初始週數據
-      const initialWeek = weekSelector.value;
-      if (initialWeek) {
-        loadAnalytics(initialWeek);
+      // 設定 weekSelector 的值為最新一週，並加載數據
+      if (lastOption) {
+        weekSelector.value = lastOption.value;
+        loadAnalytics(lastOption.value);
       } else {
         console.error("無法選擇有效的週數。");
       }
@@ -119,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const row = tableBody.insertRow();
         const cell = row.insertCell(0);
         cell.colSpan = 2;
-        cell.textContent = "所選週無可用數據。";
+        cell.textContent = "本週無統計數據";
         cell.style.textAlign = "center";
       } else {
         Object.keys(timeSummary).forEach((item) => {
