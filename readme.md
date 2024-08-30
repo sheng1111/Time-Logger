@@ -1,6 +1,6 @@
 # Time-Logger
 
-[English](./readme.md) | [中文](./readme-zh-TW.md)
+[English](./readme.md) | [中文](./readme.zh-TW.md)
 
 ## Introduction
 
