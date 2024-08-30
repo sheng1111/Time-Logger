@@ -8,6 +8,7 @@ self.addEventListener("install", (event) => {
         "/js/analytics.js",
         "/js/category.js",
         "/js/script.js",
+        "/js/timerWorker.js",
         "/images/dog.png",
         "/images/favicon.ico",
       ]);

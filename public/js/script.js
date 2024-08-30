@@ -1,13 +1,12 @@
 let db; // 全域變數，用來儲存資料庫連線
-let seconds = 0; // 計時器的秒數
-let minutes = 0; // 計時器的分鐘數
-const displaySeconds = document.getElementById("seconds"); // 用來顯示秒數的 HTML 元素
-const displayMinutes = document.getElementById("minutes"); // 用來顯示分鐘數的 HTML 元素
-let interval; // 計時器的間隔函式
+let worker; // 用來儲存 Web Worker 的實例
 let timeStatus; // 用來追蹤計時器的狀態（開始、停止、重置）
 let timeRecord = {}; // 用來儲存一條時間紀錄的物件
 let startTime; // 計時開始的時間
 let startDate; // 計時開始的日期
+
+const displaySeconds = document.getElementById("seconds"); // 用來顯示秒數的 HTML 元素
+const displayMinutes = document.getElementById("minutes"); // 用來顯示分鐘數的 HTML 元素
 
 // 開啟 IndexedDB 資料庫，版本設為 2
 let request = window.indexedDB.open("TimeLoggerDB", 2);
@@ -30,7 +29,7 @@ request.onupgradeneeded = function (event) {
 request.onsuccess = function (event) {
   db = event.target.result; // 儲存資料庫連線
 
-  // 手動檢查 'TimeLogs' 物件存儲是否存在，若不存在則創建
+  // 檢查並創建 'TimeLogs' 物件存儲
   checkAndCreateObjectStore();
 };
 
@@ -41,15 +40,9 @@ request.onerror = function (event) {
 
 // 檢查並創建 'TimeLogs' 物件存儲的函式
 function checkAndCreateObjectStore() {
-  const transaction = db.transaction(["TimeLogs"], "versionchange");
-
-  transaction.onerror = function (event) {
-    console.error("檢查或創建 'TimeLogs' 物件存儲時發生錯誤:", event);
-  };
-
   const objectStoreNames = db.objectStoreNames;
   if (!objectStoreNames.contains("TimeLogs")) {
-    // 使用版本更改交易來創建物件存儲
+    // 如果 'TimeLogs' 不存在，需要升級資料庫版本來創建它
     const newVersion = db.version + 1;
     db.close();
 
@@ -84,19 +77,32 @@ startBtn.onclick = () => {
   if (timeStatus === "startBtn") {
     console.log("計時器已經啟動");
   } else {
-    // 每秒觸發一次 timer 函式
-    interval = setInterval(timer, 1000);
-    // 使用 moment.js 設定開始時間和日期，確保時間為 UTC+8
-    startTime = moment(new Date()).utcOffset(8).format("HH:mm");
-    startDate = moment(new Date()).utcOffset(8).format("YYYY-MM-DD");
-    timeStatus = "startBtn";
+    if (typeof Worker !== "undefined") {
+      if (worker) {
+        worker.terminate(); // 如果之前有 Worker，先終止
+      }
+      worker = new Worker("/js/timerWorker.js"); // 啟動 Web Worker
+
+      worker.onmessage = function (event) {
+        const { minutes, seconds } = event.data;
+        displayMinutes.innerHTML = minutes < 10 ? `0${minutes}` : `${minutes}`;
+        displaySeconds.innerHTML = seconds < 10 ? `0${seconds}` : `${seconds}`;
+      };
+
+      // 使用 moment.js 設定開始時間和日期，確保時間為 UTC+8
+      startTime = moment(new Date()).utcOffset(8).format("HH:mm");
+      startDate = moment(new Date()).utcOffset(8).format("YYYY-MM-DD");
+      timeStatus = "startBtn";
+    } else {
+      console.error("你的瀏覽器不支持 Web Worker");
+    }
   }
 };
 
 // 點擊停止按鈕時觸發
 stopBtn.onclick = () => {
   if (timeStatus === "startBtn") {
-    clearInterval(interval); // 停止計時
+    worker.terminate(); // 停止 Worker
     timeStatus = "stopBtn";
   } else if (timeStatus === "stopBtn") {
     console.log("計時器已經停止");
@@ -111,6 +117,9 @@ restBtn.onclick = () => {
     console.log("請先停止計時器");
   } else if (timeStatus === "stopBtn") {
     returnToZero(); // 重置計時器
+    if (worker) {
+      worker.terminate(); // 重置時也停止 Worker
+    }
   }
 };
 
@@ -123,7 +132,7 @@ uploadBtn.onclick = () => {
     timeRecord = {
       date: startDate,
       time: startTime,
-      minutes: minutes,
+      minutes: parseInt(displayMinutes.innerHTML),
       item: "", // 初始設置為空，讓使用者後續選擇分類
     };
 
@@ -149,28 +158,12 @@ uploadBtn.onclick = () => {
   }
 };
 
-// 計時器每秒觸發的函式
-function timer() {
-  seconds++; // 增加秒數
-
-  // 更新顯示的秒數，若秒數小於 10，則補 0
-  displaySeconds.innerHTML = seconds < 10 ? `0${seconds}` : `${seconds}`;
-
-  // 如果秒數超過 59，將其重置並增加分鐘數
-  if (seconds > 59) {
-    minutes++;
-    displayMinutes.innerHTML = minutes < 10 ? `0${minutes}` : `${minutes}`;
-    seconds = 0;
-  }
-}
-
 // 重置計時器的函式
 function returnToZero() {
-  seconds = 0;
-  minutes = 0;
-  startTime = "";
-  timeRecord = {};
-  displaySeconds.innerHTML = `0${seconds}`;
-  displayMinutes.innerHTML = `0${minutes}`;
+  if (worker) {
+    worker.terminate();
+  }
+  displaySeconds.innerHTML = `00`;
+  displayMinutes.innerHTML = `00`;
   timeStatus = "restBtn";
 }

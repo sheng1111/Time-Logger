@@ -1,3 +1,4 @@
+// analytics.js
 document.addEventListener("DOMContentLoaded", function () {
   let db;
 

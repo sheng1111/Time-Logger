@@ -1,3 +1,4 @@
+// category.js
 // 檢查 localStorage 中是否已存在 'categories' 這個鍵值
 // 如果不存在，則初始化一個預設的類別列表
 if (!localStorage.getItem("categories")) {
