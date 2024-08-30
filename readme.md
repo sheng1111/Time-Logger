@@ -1,37 +1,95 @@
 # Time-Logger
 
-## 簡介
-Time-Logger 是我基於 EJS 和 Express 的學習項目，旨在為用戶提供基本的時間記錄功能。這個 side project 既是一款簡單的時間管理工具，也是探索 Web 應用開發的一個實踐平台。
+[English](./readme.md) | [中文](./readme-zh-TW.md)
 
-## 功能
-- **時間記錄**：使用者可以簡單地開始和結束時間記錄，用於基本的時間追蹤。
-- **日誌查看**：提供基本的界面供用戶查看他們的時間記錄。
-- **PWA 支持**：作為 Progressive Web App，Time-Logger 可以在手機和桌面上以類似原生應用的體驗運行。
+## Introduction
 
-## 技術棧
-- **Front-end**: 使用 EJS 模板引擎，簡化 HTML 內容的生成。
-- **Back-end**: 透過 Express 框架處理伺服器端請求。
-- **PWA**: 利用 Service Workers 和 Web App Manifests 實現 PWA 功能。
+Time-Logger is a learning project based on EJS and Express, designed to provide users with basic time logging features. This side project serves as both a simple time management tool and a practice platform for exploring web application development.
 
-## 安裝與啟動指南
-1. clone 
-```
+## DEMO
+
+[![Demo](https://img.shields.io/badge/DEMO-Vercel-brightgreen)](https://time-logger-dun.vercel.app/)
+
+## Features
+
+- **Time Logging**: Users can easily start and stop time logging for basic time tracking.
+- **Log View**: Provides a simple interface for users to view their time logs.
+- **Category Management**: Supports user-defined categories for time logs, which can be edited or deleted at any time.
+- **Time Analysis**: Allows users to view total time spent over a selected date range.
+- **PWA Support**: As a Progressive Web App, Time-Logger can run on both mobile and desktop with a native app-like experience.
+- **Web Worker Timing**: Ensures the timer continues to run accurately when the page is switched or the phone is locked.
+
+## Tech Stack
+
+- **Front-end**: EJS template engine for simplifying HTML content generation.
+- **Back-end**: Express framework for handling server-side requests.
+- **IndexedDB**: Used for local storage of time logs and category data, supporting offline usage.
+- **PWA**: Implemented using Service Workers and Web App Manifests to enable PWA features.
+- **Web Worker**: Ensures the timer continues to run in the background or when the phone is locked.
+
+## System Requirements
+
+- Node.js version >= 12.x
+- Modern browser compatible with Service Worker and Web Worker
+
+## Installation and Startup Guide
+
+1. Clone the repository
+
+```bash
 git clone https://github.com/sheng1111/Time-Logger.git
 ```
-2. 安裝相關套件
-```
+
+2. Install dependencies
+
+```bash
 npm install
 ```
-3. 啟動
-```
+
+3. Start the application
+
+```bash
 npm run start
 ```
 
-## 如何使用
-提供基本的使用說明，包括如何記錄時間，以及如何查看已記錄的時間。
+## Detailed Usage Instructions
 
-## 學習過程
-這個項目是作為學習 EJS 和 Express 的一部分，任何對此感興趣或者想了解 PWA 的開發者都歡迎探索和學習。
+- **Record Time**: Click "Start" to begin timing, click "Stop" to stop, and click "Upload" to save the time log.
+- **View Logs**: Go to the "Time" page and select a date to view the logs for that day.
+- **Manage Categories**: On the "Category" page, add or delete categories. Categories can be used to label different time logs.
+- **Time Analysis**: On the "Analysis" page, select a date range to view the total time spent over that period.
 
-## 聯繫方式
-如果您對這個項目有任何問題或建議，歡迎聯繫我。
+## Development and Deployment
+
+### Development
+
+- Local Development: Use `npm run start` to start the server and access the app at `http://localhost:3000`.
+- Use nodemon for hot reloading during development.
+
+### Deployment
+
+- You can deploy this app using Vercel. Simply push the project to GitHub and connect it to Vercel for automatic deployment.
+
+## Learning Process
+
+This project was developed as part of learning EJS and Express. Anyone interested in these technologies or PWA development is welcome to explore and learn.
+
+## Future Improvements
+
+- Add more time analysis charts.
+- Support more types of time logs (e.g., grouped by tasks or projects).
+- Enhance UI/UX, especially improving the mobile experience.
+
+## Contribution Guidelines
+
+Contributions are welcome via pull requests and issues. Please fork this repository and develop your feature based on the main branch. Ensure your code passes all tests before submitting.
+
+## Version History
+
+### 1.0.0
+
+- Initial release
+
+## License
+
+MIT License
