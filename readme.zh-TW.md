@@ -10,6 +10,13 @@ Time-Logger 是我基於 EJS 和 Express 的學習項目，旨在為用戶提供
 
 [![Demo](https://img.shields.io/badge/DEMO-Vercel-brightgreen)](https://time-logger-dun.vercel.app/)
 
+<p align="center">
+  <img src="./demo/index.jpg" alt="index" width=auto/>
+  <img src="./demo/list.jpg" alt="list" width=auto/>
+  <img src="./demo/list_set_category.jpg" alt="list_set_category" width=auto/>
+  <img src="./demo/analytics.jpg" alt="analytics" width=auto/>
+</p>
+
 ## 功能
 
 - **時間記錄**：使用者可以簡單地開始和結束時間記錄，用於基本的時間追蹤。

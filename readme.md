@@ -10,6 +10,13 @@ Time-Logger is a learning project based on EJS and Express, designed to provide 
 
 [![Demo](https://img.shields.io/badge/DEMO-Vercel-brightgreen)](https://time-logger-dun.vercel.app/)
 
+<p align="center">
+  <img src="./demo/index.jpg" alt="index" width=auto/>
+  <img src="./demo/list.jpg" alt="list" width=auto/>
+  <img src="./demo/list_set_category.jpg" alt="list_set_category" width=auto/>
+  <img src="./demo/analytics.jpg" alt="analytics" width=auto/>
+</p>
+
 ## Features
 
 - **Time Logging**: Users can easily start and stop time logging for basic time tracking.
